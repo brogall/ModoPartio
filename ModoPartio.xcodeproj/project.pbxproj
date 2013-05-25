@@ -6,12 +6,77 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C1576BB2174FF454009901DB /* ModoPartio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB1174FF454009901DB /* ModoPartio.cpp */; };
+		C1576BC8174FF4E8009901DB /* clean.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB5174FF4E8009901DB /* clean.cpp */; };
+		C1576BC9174FF4E8009901DB /* cwrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB6174FF4E8009901DB /* cwrap.cpp */; };
+		C1576BCA174FF4E8009901DB /* lxu_attributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB7174FF4E8009901DB /* lxu_attributes.cpp */; };
+		C1576BCB174FF4E8009901DB /* lxu_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB8174FF4E8009901DB /* lxu_command.cpp */; };
+		C1576BCC174FF4E8009901DB /* lxu_deform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BB9174FF4E8009901DB /* lxu_deform.cpp */; };
+		C1576BCD174FF4E8009901DB /* lxu_format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBA174FF4E8009901DB /* lxu_format.cpp */; };
+		C1576BCE174FF4E8009901DB /* lxu_geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBB174FF4E8009901DB /* lxu_geometry.cpp */; };
+		C1576BCF174FF4E8009901DB /* lxu_log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBC174FF4E8009901DB /* lxu_log.cpp */; };
+		C1576BD0174FF4E8009901DB /* lxu_math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBD174FF4E8009901DB /* lxu_math.cpp */; };
+		C1576BD1174FF4E8009901DB /* lxu_message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBE174FF4E8009901DB /* lxu_message.cpp */; };
+		C1576BD2174FF4E8009901DB /* lxu_modifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BBF174FF4E8009901DB /* lxu_modifier.cpp */; };
+		C1576BD3174FF4E8009901DB /* lxu_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC0174FF4E8009901DB /* lxu_parser.cpp */; };
+		C1576BD4174FF4E8009901DB /* lxu_prefvalue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC1174FF4E8009901DB /* lxu_prefvalue.cpp */; };
+		C1576BD5174FF4E8009901DB /* lxu_queries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC2174FF4E8009901DB /* lxu_queries.cpp */; };
+		C1576BD6174FF4E8009901DB /* lxu_scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC3174FF4E8009901DB /* lxu_scene.cpp */; };
+		C1576BD7174FF4E8009901DB /* lxu_select.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC4174FF4E8009901DB /* lxu_select.cpp */; };
+		C1576BD8174FF4E8009901DB /* lxu_simd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC5174FF4E8009901DB /* lxu_simd.cpp */; };
+		C1576BD9174FF4E8009901DB /* lxu_surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC6174FF4E8009901DB /* lxu_surface.cpp */; };
+		C1576BDA174FF4E8009901DB /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1576BC7174FF4E8009901DB /* util.cpp */; };
+		C1576BDB174FF821009901DB /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1576BAD174FF23A009901DB /* libcommon.a */; };
+		C1576BE7175006B4009901DB /* libpartio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1576BE6175006B4009901DB /* libpartio.a */; };
+		C1576BF917506426009901DB /* libboost_filesystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1576BF817506426009901DB /* libboost_filesystem.a */; };
+		C1576BFB1750642D009901DB /* libboost_regex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1576BFA1750642D009901DB /* libboost_regex.a */; };
+		C1576BFD17506433009901DB /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1576BFC17506433009901DB /* libboost_system.a */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		C1576BA2174FB70C009901DB /* libModoPartio.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libModoPartio.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1576BA2174FB70C009901DB /* ModoPartio.lx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = ModoPartio.lx; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1576BAD174FF23A009901DB /* libcommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1576BB1174FF454009901DB /* ModoPartio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModoPartio.cpp; sourceTree = "<group>"; };
+		C1576BB5174FF4E8009901DB /* clean.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clean.cpp; sourceTree = "<group>"; };
+		C1576BB6174FF4E8009901DB /* cwrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cwrap.cpp; sourceTree = "<group>"; };
+		C1576BB7174FF4E8009901DB /* lxu_attributes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_attributes.cpp; sourceTree = "<group>"; };
+		C1576BB8174FF4E8009901DB /* lxu_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_command.cpp; sourceTree = "<group>"; };
+		C1576BB9174FF4E8009901DB /* lxu_deform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_deform.cpp; sourceTree = "<group>"; };
+		C1576BBA174FF4E8009901DB /* lxu_format.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_format.cpp; sourceTree = "<group>"; };
+		C1576BBB174FF4E8009901DB /* lxu_geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_geometry.cpp; sourceTree = "<group>"; };
+		C1576BBC174FF4E8009901DB /* lxu_log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_log.cpp; sourceTree = "<group>"; };
+		C1576BBD174FF4E8009901DB /* lxu_math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_math.cpp; sourceTree = "<group>"; };
+		C1576BBE174FF4E8009901DB /* lxu_message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_message.cpp; sourceTree = "<group>"; };
+		C1576BBF174FF4E8009901DB /* lxu_modifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_modifier.cpp; sourceTree = "<group>"; };
+		C1576BC0174FF4E8009901DB /* lxu_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_parser.cpp; sourceTree = "<group>"; };
+		C1576BC1174FF4E8009901DB /* lxu_prefvalue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_prefvalue.cpp; sourceTree = "<group>"; };
+		C1576BC2174FF4E8009901DB /* lxu_queries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_queries.cpp; sourceTree = "<group>"; };
+		C1576BC3174FF4E8009901DB /* lxu_scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_scene.cpp; sourceTree = "<group>"; };
+		C1576BC4174FF4E8009901DB /* lxu_select.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_select.cpp; sourceTree = "<group>"; };
+		C1576BC5174FF4E8009901DB /* lxu_simd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_simd.cpp; sourceTree = "<group>"; };
+		C1576BC6174FF4E8009901DB /* lxu_surface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lxu_surface.cpp; sourceTree = "<group>"; };
+		C1576BC7174FF4E8009901DB /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
+		C1576BE6175006B4009901DB /* libpartio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpartio.a; path = ../partio/build/lib/Debug/libpartio.a; sourceTree = "<group>"; };
+		C1576BF817506426009901DB /* libboost_filesystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_filesystem.a; path = ../Boost/boost_1_53_0/stageDBG/lib/libboost_filesystem.a; sourceTree = "<group>"; };
+		C1576BFA1750642D009901DB /* libboost_regex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_regex.a; path = ../Boost/boost_1_53_0/stageDBG/lib/libboost_regex.a; sourceTree = "<group>"; };
+		C1576BFC17506433009901DB /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../Boost/boost_1_53_0/stageDBG/lib/libboost_system.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C1576B9F174FB70C009901DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1576BDB174FF821009901DB /* libcommon.a in Frameworks */,
+				C1576BE7175006B4009901DB /* libpartio.a in Frameworks */,
+				C1576BF917506426009901DB /* libboost_filesystem.a in Frameworks */,
+				C1576BFB1750642D009901DB /* libboost_regex.a in Frameworks */,
+				C1576BFD17506433009901DB /* libboost_system.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1576BAA174FF23A009901DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -24,6 +89,12 @@
 		C1576B99174FB70C009901DB = {
 			isa = PBXGroup;
 			children = (
+				C1576BFC17506433009901DB /* libboost_system.a */,
+				C1576BFA1750642D009901DB /* libboost_regex.a */,
+				C1576BF817506426009901DB /* libboost_filesystem.a */,
+				C1576BE6175006B4009901DB /* libpartio.a */,
+				C1576BB3174FF4BD009901DB /* ModoPartio */,
+				C1576BB4174FF4E8009901DB /* common */,
 				C1576BA3174FB70C009901DB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -31,15 +102,58 @@
 		C1576BA3174FB70C009901DB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C1576BA2174FB70C009901DB /* libModoPartio.dylib */,
+				C1576BA2174FB70C009901DB /* ModoPartio.lx */,
+				C1576BAD174FF23A009901DB /* libcommon.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C1576BB3174FF4BD009901DB /* ModoPartio */ = {
+			isa = PBXGroup;
+			children = (
+				C1576BB1174FF454009901DB /* ModoPartio.cpp */,
+			);
+			name = ModoPartio;
+			sourceTree = "<group>";
+		};
+		C1576BB4174FF4E8009901DB /* common */ = {
+			isa = PBXGroup;
+			children = (
+				C1576BB5174FF4E8009901DB /* clean.cpp */,
+				C1576BB6174FF4E8009901DB /* cwrap.cpp */,
+				C1576BB7174FF4E8009901DB /* lxu_attributes.cpp */,
+				C1576BB8174FF4E8009901DB /* lxu_command.cpp */,
+				C1576BB9174FF4E8009901DB /* lxu_deform.cpp */,
+				C1576BBA174FF4E8009901DB /* lxu_format.cpp */,
+				C1576BBB174FF4E8009901DB /* lxu_geometry.cpp */,
+				C1576BBC174FF4E8009901DB /* lxu_log.cpp */,
+				C1576BBD174FF4E8009901DB /* lxu_math.cpp */,
+				C1576BBE174FF4E8009901DB /* lxu_message.cpp */,
+				C1576BBF174FF4E8009901DB /* lxu_modifier.cpp */,
+				C1576BC0174FF4E8009901DB /* lxu_parser.cpp */,
+				C1576BC1174FF4E8009901DB /* lxu_prefvalue.cpp */,
+				C1576BC2174FF4E8009901DB /* lxu_queries.cpp */,
+				C1576BC3174FF4E8009901DB /* lxu_scene.cpp */,
+				C1576BC4174FF4E8009901DB /* lxu_select.cpp */,
+				C1576BC5174FF4E8009901DB /* lxu_simd.cpp */,
+				C1576BC6174FF4E8009901DB /* lxu_surface.cpp */,
+				C1576BC7174FF4E8009901DB /* util.cpp */,
+			);
+			name = common;
+			path = ../Luxology/LXSDK_59358/common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
 		C1576BA0174FB70C009901DB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1576BAB174FF23A009901DB /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -63,8 +177,25 @@
 			);
 			name = ModoPartio;
 			productName = ModoPartio;
-			productReference = C1576BA2174FB70C009901DB /* libModoPartio.dylib */;
+			productReference = C1576BA2174FB70C009901DB /* ModoPartio.lx */;
 			productType = "com.apple.product-type.library.dynamic";
+		};
+		C1576BAC174FF23A009901DB /* common */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1576BAE174FF23A009901DB /* Build configuration list for PBXNativeTarget "common" */;
+			buildPhases = (
+				C1576BA9174FF23A009901DB /* Sources */,
+				C1576BAA174FF23A009901DB /* Frameworks */,
+				C1576BAB174FF23A009901DB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = common;
+			productName = common;
+			productReference = C1576BAD174FF23A009901DB /* libcommon.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -88,6 +219,7 @@
 			projectRoot = "";
 			targets = (
 				C1576BA1174FB70C009901DB /* ModoPartio */,
+				C1576BAC174FF23A009901DB /* common */,
 			);
 		};
 /* End PBXProject section */
@@ -97,6 +229,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1576BB2174FF454009901DB /* ModoPartio.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1576BA9174FF23A009901DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1576BC8174FF4E8009901DB /* clean.cpp in Sources */,
+				C1576BC9174FF4E8009901DB /* cwrap.cpp in Sources */,
+				C1576BCA174FF4E8009901DB /* lxu_attributes.cpp in Sources */,
+				C1576BCB174FF4E8009901DB /* lxu_command.cpp in Sources */,
+				C1576BCC174FF4E8009901DB /* lxu_deform.cpp in Sources */,
+				C1576BCD174FF4E8009901DB /* lxu_format.cpp in Sources */,
+				C1576BCE174FF4E8009901DB /* lxu_geometry.cpp in Sources */,
+				C1576BCF174FF4E8009901DB /* lxu_log.cpp in Sources */,
+				C1576BD0174FF4E8009901DB /* lxu_math.cpp in Sources */,
+				C1576BD1174FF4E8009901DB /* lxu_message.cpp in Sources */,
+				C1576BD2174FF4E8009901DB /* lxu_modifier.cpp in Sources */,
+				C1576BD3174FF4E8009901DB /* lxu_parser.cpp in Sources */,
+				C1576BD4174FF4E8009901DB /* lxu_prefvalue.cpp in Sources */,
+				C1576BD5174FF4E8009901DB /* lxu_queries.cpp in Sources */,
+				C1576BD6174FF4E8009901DB /* lxu_scene.cpp in Sources */,
+				C1576BD7174FF4E8009901DB /* lxu_select.cpp in Sources */,
+				C1576BD8174FF4E8009901DB /* lxu_simd.cpp in Sources */,
+				C1576BD9174FF4E8009901DB /* lxu_surface.cpp in Sources */,
+				C1576BDA174FF4E8009901DB /* util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,7 +322,22 @@
 		C1576BA7174FB70C009901DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_EXTENSION = lx;
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"/Users/acct/Luxology/LXSDK_59358/include/**",
+					/Users/acct/Boost/boost_1_53_0,
+					/Users/acct/partio/src/lib,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/Users/acct/partio/build/lib/Debug,
+					/Users/acct/Boost/boost_1_53_0/stageDBG/lib,
+				);
+				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -171,7 +345,36 @@
 		C1576BA8174FB70C009901DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				EXECUTABLE_EXTENSION = lx;
+				EXECUTABLE_PREFIX = "";
+				HEADER_SEARCH_PATHS = (
+					"/Users/acct/Luxology/LXSDK_59358/include/**",
+					/Users/acct/Boost/boost_1_53_0,
+					/Users/acct/partio/src/lib,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/Users/acct/partio/build/lib/Release,
+					/Users/acct/Boost/boost_1_53_0/stageREL/lib,
+				);
+				OTHER_LDFLAGS = "-lz";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C1576BAF174FF23A009901DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Users/acct/Luxology/LXSDK_59358/include/**";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C1576BB0174FF23A009901DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Users/acct/Luxology/LXSDK_59358/include/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -193,6 +396,15 @@
 			buildConfigurations = (
 				C1576BA7174FB70C009901DB /* Debug */,
 				C1576BA8174FB70C009901DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1576BAE174FF23A009901DB /* Build configuration list for PBXNativeTarget "common" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1576BAF174FF23A009901DB /* Debug */,
+				C1576BB0174FF23A009901DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

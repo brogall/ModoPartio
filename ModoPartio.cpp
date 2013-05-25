@@ -51,7 +51,9 @@
 #include <boost/algorithm/string.hpp>    
 
 
-
+#ifdef __APPLE__
+typedef unsigned long long _ULONGLONG;
+#endif
 
 
 static const char * paddingStringList[] = {
@@ -113,7 +115,7 @@ public:
 struct ParticleFeature
 {
 	std::string name;
-	unsigned offset;
+	int offset;
 	unsigned size;		//	number of floats
 	Partio::ParticleAttribute attr;
 	Partio::ParticleAccessor * pacc;
@@ -493,7 +495,7 @@ CModoPartioInstance::prti_Evaluate (
         CModoPartioGenerator	*gen = gen_spawn.Alloc (ppvObj);
 		gen->pins_item = m_item;
 
-		bool stringRead = ai.String(index + 0, gen->s_path);
+		ai.String(index + 0, gen->s_path);
 
         ai.ObjectRO            (index + 1, gen->w_matrix);		//	world matrix of locator
 
@@ -738,7 +740,7 @@ LxResult CModoPartioInstance::pcache_SaveFrame(ILxUnknownID pobj, double time)
 	tsrf.Sample(bbox, -1.0f, trisoup);
 
 	std::string writeName = fileName;
-	std::string frameString = std::to_string((_ULonglong)frame);
+	std::string frameString = std::to_string((_ULONGLONG)frame);
 	if (frameString.size() < padding)
 	{
 		writeName += paddingString.substr(0, padding - frameString.size());
