@@ -236,7 +236,8 @@ class CModoPartioInstance :
         public CLxImpl_ParticleItem,
 		public CLxImpl_TableauSource,
 		public CLxImpl_PointCacheItem,
-		public CLxImpl_SceneItemListener
+		public CLxImpl_SceneItemListener,
+		public CLxImpl_ChannelUI
 {
 	friend class CLxTriSoup;
 
@@ -252,6 +253,7 @@ class CModoPartioInstance :
                 srv->AddInterface (new CLxIfc_TableauSource  <CModoPartioInstance>);
 				srv->AddInterface(new CLxIfc_PointCacheItem <CModoPartioInstance>);
 				srv->AddInterface(new CLxIfc_SceneItemListener <CModoPartioInstance>);
+				srv->AddInterface(new CLxIfc_ChannelUI <CModoPartioInstance>);
                 lx::AddSpawner (SPNNAME_INSTANCE, srv);
         }
 
@@ -304,6 +306,11 @@ class CModoPartioInstance :
          */
 		void sil_LinkAdd(const char *graph, ILxUnknownID itemFrom, ILxUnknownID itemTo) LXx_OVERRIDE;
 
+        /*
+         * ChannelUI interface.
+         */
+
+
 	private:
 		void AddVertex(const float *vertex,	unsigned int *index);
 
@@ -342,6 +349,7 @@ class CModoPartioPackage :
         LxResult		pkg_Attach (void **ppvObj) LXx_OVERRIDE;
 
 		LxResult		cui_UIHints(const char *channelName, ILxUnknownID hints) LXx_OVERRIDE; 
+		LxResult		cui_Enabled(const char *channelName, ILxUnknownID msg, ILxUnknownID item, ILxUnknownID chanRead) LXx_OVERRIDE;
 };
 
 
@@ -455,6 +463,54 @@ CModoPartioPackage::cui_UIHints(const char *channelName, ILxUnknownID hints)
 			return LXe_OK;
 		}
 
+LxResult CModoPartioPackage::cui_Enabled(const char *channelName, ILxUnknownID msg, ILxUnknownID item, ILxUnknownID chanRead)
+		{
+			LxResult result = LXe_OK;
+			std::string channelNameString(channelName);
+
+			if (channelNameString == "padding")
+			{
+				CLxUser_Item userItem(item);
+				std::string ident = userItem.GetIdentity();
+
+				CLxUser_ChannelRead chan(chanRead);
+				CLxUser_Message res(msg);
+
+				int partioMode = chan.IValue(userItem, "partioMode");
+				if (partioMode == 2)
+				{
+					res.SetCode(LXe_OK);
+				}
+				else
+				{
+					res.SetCode(LXe_CMD_DISABLED);
+					result = LXe_CMD_DISABLED;
+				}
+			}
+			else if (channelNameString == "frame")
+			{
+				CLxUser_Item userItem(item);
+				std::string ident = userItem.GetIdentity();
+
+				CLxUser_ChannelRead chan(chanRead);
+				CLxUser_Message res(msg);
+
+				int partioMode = chan.IValue(userItem, "partioMode");
+				if (partioMode != 2)
+				{
+					res.SetCode(LXe_OK);
+				}
+				else
+				{
+					res.SetCode(LXe_CMD_DISABLED);
+					result = LXe_CMD_DISABLED;
+				}
+			}
+
+			return result;
+		}
+
+
 /*
  * ----------------------------------------------------------------
  * ModoPartio Item Instance
@@ -504,7 +560,6 @@ void CModoPartioInstance::sil_LinkAdd(const char *graph, ILxUnknownID itemFrom, 
 			}
 		}
 	}
-
 
 	return;
 }
