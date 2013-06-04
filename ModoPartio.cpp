@@ -39,8 +39,11 @@
 #include <lx_vertex.hpp>	//	new in 701
 #include <lx_channelui.hpp>
 #include <lx_select.hpp>
+#include <lx_listener.hpp>
 
 #include <algorithm>
+#include <map>
+
 
 #include <Partio.h>
 
@@ -48,7 +51,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/algorithm/string.hpp>    
+#include <boost/algorithm/string.hpp>  
+#include <boost/assign.hpp>
 
 
 #ifdef __APPLE__
@@ -59,6 +63,9 @@ typedef unsigned long long _ULONGLONG;
 static const char * paddingStringList[] = {
 	"#", "##", "###", "####", "#####", NULL
 };
+
+const std::map<std::string, int> graphTypes = boost::assign::map_list_of(LXsGRAPH_PARTICLE, 1)("pointCache", 2);
+
 
 
 typedef boost::bimap<std::string, std::string> ConversionBimap;
@@ -110,6 +117,8 @@ public:
 		}
 	}
 };
+
+
 
 
 struct ParticleFeature
@@ -226,7 +235,9 @@ class CModoPartioInstance :
         public CLxImpl_PackageInstance,
         public CLxImpl_ParticleItem,
 		public CLxImpl_TableauSource,
-		public CLxImpl_PointCacheItem
+		public CLxImpl_PointCacheItem,
+		public CLxImpl_SceneItemListener,
+		public CLxImpl_ChannelUI
 {
 	friend class CLxTriSoup;
 
@@ -241,11 +252,14 @@ class CModoPartioInstance :
                 srv->AddInterface (new CLxIfc_ParticleItem   <CModoPartioInstance>);
                 srv->AddInterface (new CLxIfc_TableauSource  <CModoPartioInstance>);
 				srv->AddInterface(new CLxIfc_PointCacheItem <CModoPartioInstance>);
+				srv->AddInterface(new CLxIfc_SceneItemListener <CModoPartioInstance>);
+				srv->AddInterface(new CLxIfc_ChannelUI <CModoPartioInstance>);
                 lx::AddSpawner (SPNNAME_INSTANCE, srv);
         }
 
         CLxSpawner<CModoPartioGenerator>	 gen_spawn;
         CLxUser_Item			 m_item;
+		ILxUnknownID	 self_obj;
 
 		Partio::ParticlesDataMutable * pData;
 		std::string fileName;
@@ -281,12 +295,21 @@ class CModoPartioInstance :
          * PointCacheItem interface.
          */
 		boost::ptr_vector<ParticleFeature>particleFeatures;
-//		std::vector<ParticleFeature> particleFeatures;
 
 		LxResult pcache_Prepare(ILxUnknownID eval, unsigned *index) LXx_OVERRIDE;
 		LxResult pcache_Initialize(ILxUnknownID vdesc, ILxUnknownID attr, unsigned index, double time, double sample) LXx_OVERRIDE;
 		LxResult pcache_SaveFrame(ILxUnknownID pobj, double time) LXx_OVERRIDE;
 		LxResult pcache_Cleanup() LXx_OVERRIDE;
+
+        /*
+         * SceneItemListener interface.
+         */
+		void sil_LinkAdd(const char *graph, ILxUnknownID itemFrom, ILxUnknownID itemTo) LXx_OVERRIDE;
+
+        /*
+         * ChannelUI interface.
+         */
+
 
 	private:
 		void AddVertex(const float *vertex,	unsigned int *index);
@@ -326,6 +349,7 @@ class CModoPartioPackage :
         LxResult		pkg_Attach (void **ppvObj) LXx_OVERRIDE;
 
 		LxResult		cui_UIHints(const char *channelName, ILxUnknownID hints) LXx_OVERRIDE; 
+		LxResult		cui_Enabled(const char *channelName, ILxUnknownID msg, ILxUnknownID item, ILxUnknownID chanRead) LXx_OVERRIDE;
 };
 
 
@@ -387,6 +411,8 @@ CModoPartioPackage::pkg_SetupChannels (
 
 		ac.NewChannel("frame", LXsTYPE_INTEGER);
 
+		ac.NewChannel("partioMode", LXsTYPE_INTEGER);
+		ac.SetDefault(0.0, 0);
 
         return LXe_OK;
 }
@@ -412,7 +438,9 @@ CModoPartioPackage::pkg_TestInterface (
 CModoPartioPackage::pkg_Attach (
         void		       **ppvObj)
 {
-        inst_spawn.Alloc (ppvObj);
+        CModoPartioInstance * inst = inst_spawn.Alloc (ppvObj);
+		inst->self_obj = (ILxUnknownID)ppvObj[0];
+
         return LXe_OK;
 }
 
@@ -435,6 +463,54 @@ CModoPartioPackage::cui_UIHints(const char *channelName, ILxUnknownID hints)
 			return LXe_OK;
 		}
 
+LxResult CModoPartioPackage::cui_Enabled(const char *channelName, ILxUnknownID msg, ILxUnknownID item, ILxUnknownID chanRead)
+		{
+			LxResult result = LXe_OK;
+			std::string channelNameString(channelName);
+
+			if (channelNameString == "padding")
+			{
+				CLxUser_Item userItem(item);
+				std::string ident = userItem.GetIdentity();
+
+				CLxUser_ChannelRead chan(chanRead);
+				CLxUser_Message res(msg);
+
+				int partioMode = chan.IValue(userItem, "partioMode");
+				if (partioMode == 2)
+				{
+					res.SetCode(LXe_OK);
+				}
+				else
+				{
+					res.SetCode(LXe_CMD_DISABLED);
+					result = LXe_CMD_DISABLED;
+				}
+			}
+			else if (channelNameString == "frame")
+			{
+				CLxUser_Item userItem(item);
+				std::string ident = userItem.GetIdentity();
+
+				CLxUser_ChannelRead chan(chanRead);
+				CLxUser_Message res(msg);
+
+				int partioMode = chan.IValue(userItem, "partioMode");
+				if (partioMode != 2)
+				{
+					res.SetCode(LXe_OK);
+				}
+				else
+				{
+					res.SetCode(LXe_CMD_DISABLED);
+					result = LXe_CMD_DISABLED;
+				}
+			}
+
+			return result;
+		}
+
+
 /*
  * ----------------------------------------------------------------
  * ModoPartio Item Instance
@@ -443,6 +519,52 @@ CModoPartioPackage::cui_UIHints(const char *channelName, ILxUnknownID hints)
  * allocated for each item in the scene. It can respond to a set of
  * events. Initialization typically stores the item it's attached to.
  */
+
+void CModoPartioInstance::sil_LinkAdd(const char *graph, ILxUnknownID itemFrom, ILxUnknownID itemTo)
+{
+	CLxUser_Item userItemTo(itemTo);
+	CLxUser_Item userItemFrom(itemFrom);
+	std::string graphName(graph);
+
+	if (userItemFrom == m_item)		//	instance connected to something new
+	{
+		std::map<std::string, int>::const_iterator graphIter;
+		graphIter = graphTypes.find(graphName);
+		if (graphIter != graphTypes.end())
+		{
+			CLxUser_ChannelWrite chan;
+			chan.from(m_item);
+			chan.Set(m_item, "partioMode", graphIter->second);
+
+			CLxUser_Scene scn;
+			scn.from(m_item);
+			CLxUser_ItemGraph iGraph;
+			unsigned link_count;
+			CLxUser_Item dest;
+			for (graphIter = graphTypes.begin(); graphIter != graphTypes.end(); ++graphIter)
+			{
+				if (scn.GetGraph(graphIter->first.c_str(), iGraph))
+				{
+					iGraph.FwdCount(m_item, &link_count);
+					for (unsigned i=0; i < link_count; ++i)
+					{
+						if (iGraph.Forward(m_item, i, dest))
+						{
+							if (dest != userItemTo || graphIter->first != graph)
+							{
+								iGraph.DeleteLink(m_item, dest);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return;
+}
+
+
         LxResult
 CModoPartioInstance::pins_Initialize (
         ILxUnknownID		 item,
@@ -450,13 +572,23 @@ CModoPartioInstance::pins_Initialize (
 {
         m_item.set (item);
 
+		CLxUser_Scene		 scene (m_item);
+		CLxUser_ListenerPort	 port (scene);
+
+		port.AddListener (self_obj);
+
         return LXe_OK;
 }
 
         void
 CModoPartioInstance::pins_Cleanup (void)
 {
-        m_item.clear ();
+	CLxUser_Scene		 scene (m_item);
+	CLxUser_ListenerPort	 port (scene);
+
+	port.RemoveListener (self_obj);
+
+    m_item.clear ();
 }
 
 
@@ -477,6 +609,36 @@ CModoPartioInstance::prti_Prepare (
 //			eval.AddChan (m_item, "padding");
             eval.AddChan (m_item, LXsICHAN_XFRMCORE_WORLDMATRIX);
 			eval.AddChan(m_item, "frame");
+
+
+		CLxUser_Scene scn;
+		scn.from(m_item);		
+
+		CLxUser_ItemGraph pGraph;
+		unsigned link_count;
+
+		CLxLoc_Item dest;
+		const char * destName = NULL;
+		const char * typeName = NULL;
+		const char * ident = NULL;
+		LXtItemType destType;
+		CLxUser_SceneService ssvc;
+
+		if (scn.GetGraph(LXsGRAPH_PARTICLE, pGraph))
+		{
+			pGraph.FwdCount(m_item, &link_count);
+
+			for (unsigned i=0; i < link_count; ++i)
+			{
+				if (pGraph.Forward(m_item, i, dest))
+				{
+					dest.Name(&destName);
+					destType = dest.Type();
+					ssvc.ItemTypeName(destType, &typeName);
+					dest.Ident(&ident);
+				}
+			}
+		}
 
         return LXe_OK;
 }
@@ -582,6 +744,49 @@ LxResult CModoPartioInstance::pcache_Prepare(ILxUnknownID evalObj, unsigned *ind
 	CLxUser_Evaluation	 eval (evalObj);
 	index[0] = eval.AddChan (m_item, "cacheFileName");
 	eval.AddChan (m_item, "padding");
+
+
+
+	CLxUser_Scene scn;
+	scn.from(m_item);		
+
+	//CLxUser_SceneGraph scGraph;
+	//const char * scGraphName = NULL;
+	//void * pvObj = NULL;
+	CLxUser_ItemGraph pGraph;
+	unsigned link_count;
+
+	CLxLoc_Item dest;
+	const char * destName = NULL;
+	const char * typeName = NULL;
+	const char * ident = NULL;
+	LXtItemType destType;
+	CLxUser_SceneService ssvc;
+
+	//int graphCount;
+	//scn.GraphCount(&graphCount);
+	//for (int i=0; i < graphCount; ++i)
+	//{
+	//	scn.GraphByIndex(i, &pvObj);
+	//	scGraph.take(pvObj);
+	//	scGraph.Name(&scGraphName);
+	//}
+
+	if (scn.GetGraph("pointCache", pGraph))
+	{
+		pGraph.FwdCount(m_item, &link_count);
+
+		for (unsigned i=0; i < link_count; ++i)
+		{
+			if (pGraph.Forward(m_item, i, dest))
+			{
+				dest.Name(&destName);
+				destType = dest.Type();
+				ssvc.ItemTypeName(destType, &typeName);
+				dest.Ident(&ident);
+			}
+		}
+	}
 
 	return LXe_OK;
 }
