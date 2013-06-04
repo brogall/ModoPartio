@@ -306,9 +306,6 @@ class CModoPartioInstance :
          */
 		void sil_LinkAdd(const char *graph, ILxUnknownID itemFrom, ILxUnknownID itemTo) LXx_OVERRIDE;
 
-        /*
-         * ChannelUI interface.
-         */
 
 
 	private:
@@ -606,39 +603,9 @@ CModoPartioInstance::prti_Prepare (
 
         index[0] =
             eval.AddChan (m_item, "cacheFileName");
-//			eval.AddChan (m_item, "padding");
             eval.AddChan (m_item, LXsICHAN_XFRMCORE_WORLDMATRIX);
 			eval.AddChan(m_item, "frame");
 
-
-		CLxUser_Scene scn;
-		scn.from(m_item);		
-
-		CLxUser_ItemGraph pGraph;
-		unsigned link_count;
-
-		CLxLoc_Item dest;
-		const char * destName = NULL;
-		const char * typeName = NULL;
-		const char * ident = NULL;
-		LXtItemType destType;
-		CLxUser_SceneService ssvc;
-
-		if (scn.GetGraph(LXsGRAPH_PARTICLE, pGraph))
-		{
-			pGraph.FwdCount(m_item, &link_count);
-
-			for (unsigned i=0; i < link_count; ++i)
-			{
-				if (pGraph.Forward(m_item, i, dest))
-				{
-					dest.Name(&destName);
-					destType = dest.Type();
-					ssvc.ItemTypeName(destType, &typeName);
-					dest.Ident(&ident);
-				}
-			}
-		}
 
         return LXe_OK;
 }
@@ -744,49 +711,6 @@ LxResult CModoPartioInstance::pcache_Prepare(ILxUnknownID evalObj, unsigned *ind
 	CLxUser_Evaluation	 eval (evalObj);
 	index[0] = eval.AddChan (m_item, "cacheFileName");
 	eval.AddChan (m_item, "padding");
-
-
-
-	CLxUser_Scene scn;
-	scn.from(m_item);		
-
-	//CLxUser_SceneGraph scGraph;
-	//const char * scGraphName = NULL;
-	//void * pvObj = NULL;
-	CLxUser_ItemGraph pGraph;
-	unsigned link_count;
-
-	CLxLoc_Item dest;
-	const char * destName = NULL;
-	const char * typeName = NULL;
-	const char * ident = NULL;
-	LXtItemType destType;
-	CLxUser_SceneService ssvc;
-
-	//int graphCount;
-	//scn.GraphCount(&graphCount);
-	//for (int i=0; i < graphCount; ++i)
-	//{
-	//	scn.GraphByIndex(i, &pvObj);
-	//	scGraph.take(pvObj);
-	//	scGraph.Name(&scGraphName);
-	//}
-
-	if (scn.GetGraph("pointCache", pGraph))
-	{
-		pGraph.FwdCount(m_item, &link_count);
-
-		for (unsigned i=0; i < link_count; ++i)
-		{
-			if (pGraph.Forward(m_item, i, dest))
-			{
-				dest.Name(&destName);
-				destType = dest.Type();
-				ssvc.ItemTypeName(destType, &typeName);
-				dest.Ident(&ident);
-			}
-		}
-	}
 
 	return LXe_OK;
 }
