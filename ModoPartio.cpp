@@ -66,13 +66,31 @@ static const char * paddingStringList[] = {
 
 const std::map<std::string, int> graphTypes = boost::assign::map_list_of(LXsGRAPH_PARTICLE, 1)("pointCache", 2);
 
+std::string modoParticleFeatureArray[] = {LXsTBLX_PARTICLE_POS   ,
+										LXsTBLX_PARTICLE_XFRM  ,
+										LXsTBLX_PARTICLE_ID    ,
+										LXsTBLX_PARTICLE_SIZE  ,
+										LXsTBLX_PARTICLE_VEL   ,
+										LXsTBLX_PARTICLE_MASS  ,
+										LXsTBLX_PARTICLE_FORCE ,
+										LXsTBLX_PARTICLE_AGE   ,
+										LXsTBLX_PARTICLE_PATH  ,
+										LXsTBLX_PARTICLE_DISS  ,
+										LXsTBLX_PARTICLE_RATE  ,
+										LXsTBLX_PARTICLE_ITEM  ,
+										LXsTBLX_PARTICLE_ANGVEL,
+										LXsTBLX_PARTICLE_TORQUE,
+										LXsTBLX_PARTICLE_PPREV ,
+										LXsTBLX_PARTICLE_LUM   ,
+										LXsTBLX_PARTICLE_RGB   };
 
+const std::set<std::string> modoParticleFeaturesSet(modoParticleFeatureArray, modoParticleFeatureArray + sizeof(modoParticleFeatureArray) / sizeof(modoParticleFeatureArray[0]));
 
 typedef boost::bimap<std::string, std::string> ConversionBimap;
 typedef ConversionBimap::value_type ConversionBimapValue;
 
 
-class Conversion
+class Conversion	//	for converting particle feature names between modo and other formats/applications
 {
 public:
 	ConversionBimap bimap;
@@ -88,8 +106,8 @@ public:
 
 	void SetConstants()
 	{
-		bimap.insert(ConversionBimapValue("importedID", "id"));	//	avoid collision with id's for other formats/applications
-		bimap.insert(ConversionBimapValue(LXsTBLX_PARTICLE_ID, "ModoID"));	
+		//bimap.insert(ConversionBimapValue("importedID", "id"));	//	avoid collision with id's for other formats/applications
+		//bimap.insert(ConversionBimapValue(LXsTBLX_PARTICLE_ID, "ModoID"));	
 
 		bimap.insert(ConversionBimapValue(LXsTBLX_PARTICLE_POS, "position"));	//	dedicated Partio term 
 	}
@@ -1056,21 +1074,32 @@ CModoPartioGenerator::tsrf_FeatureCount (
 	{
 		return 0;							//	always need particle position data
 	}
-	particleAttributeNames.push_back("position");
+	particleAttributeNames.push_back(LXsTBLX_PARTICLE_POS);
 	for (int i=0; i < attribCount; ++i)
 	{
 		data->attributeInfo(i, attr);
 		if (attr.name != "position")
 		{
-			particleAttributeNames.push_back(attr.name);
+			if (modoParticleFeaturesSet.find(attr.name) != modoParticleFeaturesSet.end())
+			{
+				particleAttributeNames.push_back(attr.name);	//	if attribute has same name as a standard modo particle feature use it
+			}
+			else if(fileType == ".icecache" || fileType == ".bin")
+			{
+				ConversionBimap::right_const_iterator conversionIter = conversion.bimap.right.find(attr.name);
+				if (conversionIter != conversion.bimap.right.end())
+				{
+					particleAttributeNames.push_back(conversionIter->second);	//	conversion available
+				} 
+			}
 		}
 	}
 
-	if (!data->attributeInfo(LXsTBLX_PARTICLE_ID, attr))
+	if (std::find(particleAttributeNames.begin(), particleAttributeNames.end(), LXsTBLX_PARTICLE_ID) == particleAttributeNames.end())
 	{
 		particleAttributeNames.push_back(LXsTBLX_PARTICLE_ID);					//	always set particle id
 	}
-	if (!data->attributeInfo(LXsTBLX_PARTICLE_XFRM, attr) && !(fileType == ".icecache" && data->attributeInfo("Orientation", attr)))
+	if (std::find(particleAttributeNames.begin(), particleAttributeNames.end(), LXsTBLX_PARTICLE_XFRM) == particleAttributeNames.end())
 	{
 		particleAttributeNames.push_back(LXsTBLX_PARTICLE_XFRM);							//	always set particle xfrm
 	}
@@ -1087,27 +1116,7 @@ CModoPartioGenerator::tsrf_FeatureByIndex (
         if (type != LXiTBLX_PARTICLES || index > (unsigned int)(particleAttributeNames.size()))
                 return LXe_OUTOFBOUNDS;
 
-		if (particleAttributeNames[index] == "position")
-		{
-			name[0] = LXsTBLX_PARTICLE_POS;
-		}
-		else if (fileType == ".icecache")
-		{
-			ConversionBimap::right_const_iterator conversionIter = conversion.bimap.right.find(particleAttributeNames[index]);
-			if (conversionIter != conversion.bimap.right.end())
-			{
-				name[0] = conversionIter->second.c_str();	//	conversion available
-			} 
-			else
-			{
-				name[0] = particleAttributeNames[index].c_str();
-			}
-		} 
-		else
-		{
-			name[0] = particleAttributeNames[index].c_str();
-		}
-
+		name[0] = particleAttributeNames[index].c_str();
 
         return LXe_OK;
 }
@@ -1144,7 +1153,7 @@ CModoPartioGenerator::tsrf_SetVertex (
 		{
 			attrName = "position";
 		}
-		else if (fileType == ".icecache")
+		else if (fileType == ".icecache" || fileType == ".bin")
 		{
 			ConversionBimap::left_const_iterator conversionIter = conversion.bimap.left.find(std::string(featureName));
 			if (conversionIter != conversion.bimap.left.end())
@@ -1171,11 +1180,20 @@ CModoPartioGenerator::tsrf_SetVertex (
 	Compare cmp;
 	particleFeatures.sort(cmp);	//	sorting probably not necessary since features already seem to be in this order
 
-	unsigned int prev_offset = vrt_size;
+	int prev_offset = vrt_size;
 	boost::ptr_vector<ParticleFeature>::reverse_iterator particleFeatures_Iter = particleFeatures.rbegin();	//	calculate size of features (# floats)
 	for (; particleFeatures_Iter != particleFeatures.rend(); ++particleFeatures_Iter)
 	{
-		particleFeatures_Iter->size = std::min((int)(prev_offset - particleFeatures_Iter->offset), particleFeatures_Iter->attr.count);	//	make sure not trying to read more data than present in Partio
+		int checkOffset = particleFeatures_Iter->offset;
+		int checkCount = particleFeatures_Iter->attr.count;
+		if (particleFeatures_Iter->pacc)
+		{
+			particleFeatures_Iter->size = std::min((int)(prev_offset - particleFeatures_Iter->offset), particleFeatures_Iter->attr.count);	//	make sure not trying to read more data than present in Partio
+		} 
+		else
+		{
+			particleFeatures_Iter->size = 0;
+		}
 		prev_offset = particleFeatures_Iter->offset;
 	}
 
