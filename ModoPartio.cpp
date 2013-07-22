@@ -1121,65 +1121,65 @@ CModoPartioGenerator::tsrf_FeatureByIndex (
 CModoPartioGenerator::tsrf_SetVertex (
         ILxUnknownID		 vdesc)
 {
-        CLxUser_TableauVertex	 vrx (vdesc);
+    CLxUser_TableauVertex	 vrx (vdesc);
 
 
-        vrt_size = vrx.Size ();
-        if (vrt_size == 0)
-                return LXe_OK;
+    vrt_size = vrx.Size ();
+    if (vrt_size == 0)
+            return LXe_OK;
 
-        unsigned		 offset;
-		const char * featureName;		//	name of modo particle feature
-		std::string attrName;			//	Partio attribute name
-		Partio::ParticleAttribute partioAttr;
-		LXtID4 type;
-		unsigned int featureCount = vrx.Count();
-		particleFeatures.clear();
-		for (unsigned int i=0; i < featureCount; ++i)
+    unsigned		 offset;
+	const char * featureName;		//	name of modo particle feature
+	std::string attrName;			//	Partio attribute name
+	Partio::ParticleAttribute partioAttr;
+	LXtID4 type;
+	unsigned int featureCount = vrx.Count();
+	particleFeatures.clear();
+	for (unsigned int i=0; i < featureCount; ++i)
+	{
+		vrx.ByIndex(i, &type, &featureName, &offset);
+
+		attrName = featureName;
+		if (attrName == LXsTBLX_PARTICLE_POS)
 		{
-			vrx.ByIndex(i, &type, &featureName, &offset);
-
-			attrName = featureName;
-			if (attrName == LXsTBLX_PARTICLE_POS)
+			attrName = "position";
+		}
+		else if (fileType == ".icecache")
+		{
+			ConversionBimap::left_const_iterator conversionIter = conversion.bimap.left.find(std::string(featureName));
+			if (conversionIter != conversion.bimap.left.end())
 			{
-				attrName = "position";
-			}
-			else if (fileType == ".icecache")
-			{
-				ConversionBimap::left_const_iterator conversionIter = conversion.bimap.left.find(std::string(featureName));
-				if (conversionIter != conversion.bimap.left.end())
-				{
-					attrName = conversionIter->second;
-				} 
-				else
-				{
-					attrName = featureName;
-				}
-			}
-
-
-			if(data->attributeInfo(attrName.c_str(), partioAttr))
-			{
-				particleFeatures.push_back(new ParticleFeature(featureName, offset, 0, partioAttr, new Partio::ParticleAccessor(partioAttr)));
-			}
+				attrName = conversionIter->second;
+			} 
 			else
 			{
-				particleFeatures.push_back(new ParticleFeature(featureName, offset, 0));
+				attrName = featureName;
 			}
 		}
 
-		Compare cmp;
-		particleFeatures.sort(cmp);	//	sorting probably not necessary since features already seem to be in this order
 
-		unsigned int prev_offset = vrt_size;
-		boost::ptr_vector<ParticleFeature>::reverse_iterator particleFeatures_Iter = particleFeatures.rbegin();	//	calculate size of features (# floats)
-		for (; particleFeatures_Iter != particleFeatures.rend(); ++particleFeatures_Iter)
+		if(data && data->attributeInfo(attrName.c_str(), partioAttr))		//	when feeding into a particle modifier, the modifier node still asks for data even after we tell it we have zero particle features, so check for data here
 		{
-			particleFeatures_Iter->size = std::min((int)(prev_offset - particleFeatures_Iter->offset), particleFeatures_Iter->attr.count);	//	make sure not trying to read more data than present in Partio
-			prev_offset = particleFeatures_Iter->offset;
+			particleFeatures.push_back(new ParticleFeature(featureName, offset, 0, partioAttr, new Partio::ParticleAccessor(partioAttr)));
 		}
+		else
+		{
+			particleFeatures.push_back(new ParticleFeature(featureName, offset, 0));
+		}
+	}
 
-        return LXe_OK;
+	Compare cmp;
+	particleFeatures.sort(cmp);	//	sorting probably not necessary since features already seem to be in this order
+
+	unsigned int prev_offset = vrt_size;
+	boost::ptr_vector<ParticleFeature>::reverse_iterator particleFeatures_Iter = particleFeatures.rbegin();	//	calculate size of features (# floats)
+	for (; particleFeatures_Iter != particleFeatures.rend(); ++particleFeatures_Iter)
+	{
+		particleFeatures_Iter->size = std::min((int)(prev_offset - particleFeatures_Iter->offset), particleFeatures_Iter->attr.count);	//	make sure not trying to read more data than present in Partio
+		prev_offset = particleFeatures_Iter->offset;
+	}
+
+    return LXe_OK;
 }
 
 
@@ -1194,6 +1194,11 @@ CModoPartioGenerator::tsrf_Sample (
 {
         int			 i;
         LxResult		 result;
+
+		if (!data)
+		{
+			return LXe_OK;	//	when feeding into a particle modifier, the modifier node still asks for data even after we tell it we have zero particle features, so check for data here
+		}
 
         /*
          * Allocate the vertex vector and init to zeros. We only need one
